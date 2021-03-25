@@ -18,23 +18,23 @@
                   id="prenomId" 
                   type="text" 
                   placeholder="Votre prénom ici (obligatoire)" 
-                  formControlName="nomProbleme"            
-                  [ngClass]="{'is-valid': (problemeForm.get('nomProbleme').touched || 
-                  problemeForm.get('nomProbleme').dirty) &&
-                  (problemeForm.get('nomProbleme').valid),
-                  'is-invalid': (problemeForm.get('nomProbleme').touched || 
-                  problemeForm.get('nomProbleme').dirty) &&
-                  (!problemeForm.get('nomProbleme').valid )}" />
+                  formControlName="longueur"            
+                  [ngClass]="{'is-valid': (problemeForm.get('longueur').touched || 
+                  problemeForm.get('longueur').dirty) &&
+                  (problemeForm.get('longueur').valid),
+                  'is-invalid': (problemeForm.get('longueur').touched || 
+                  problemeForm.get('longueur').dirty) &&
+                  (!problemeForm.get('longueur').valid )}" />
                   
-                  <span class ="form-text" *ngIf="(problemeForm.get('nomProbleme').touched || 
-                      problemeForm.get('nomProbleme').dirty) &&
-                      problemeForm.get('nomProbleme').errors">
-                      <span *ngIf="problemeForm.get('nomProbleme').errors.minlength">
+                  <span class ="form-text" *ngIf="(problemeForm.get('longueur').touched || 
+                      problemeForm.get('longueur').dirty) &&
+                      problemeForm.get('longueur').errors">
+                      <span *ngIf="!problemeForm.get('longueur').errors.longueurMinimum">
                         <small class="text-muted">
                           Veuillez entrer plus de caractères
                         </small>
                       </span>
-                      <span *ngIf="problemeForm.get('nomProbleme').errors.required">
+                      <span *ngIf="!problemeForm.get('longueur').errors.sansespaces">
                         <small class="text-muted">
                           Merci de saisir votre prénom
                         </small>
