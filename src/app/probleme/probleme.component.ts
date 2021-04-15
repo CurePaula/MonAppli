@@ -1,8 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ZonesValidator } from '../shared/longueur-minimum/longueur-minimum.component';
 import { ITypeProbleme } from './typeprobleme';
 import { TypeproblemeService } from './typeprobleme.service';
+
+function courrielsValides(c: AbstractControl): { [key: string]: boolean } | null {
+  let courriel = c.get('courriel');
+  let courrielConfirmation = c.get('courrielConfirmation');
+
+  if (!courriel.value || !courrielConfirmation.value) {
+    return null;  
+  }  
+  if (courriel.value === courrielConfirmation.value) {
+    return null;  
+  } 
+  return { 'courrielsInvalides': true };
+};
 
 @Component({
   selector: 'Inter-probleme',
@@ -10,11 +23,9 @@ import { TypeproblemeService } from './typeprobleme.service';
   styleUrls: ['./probleme.component.css']
 })
 export class ProblemeComponent implements OnInit {
-  
   problemeForm: FormGroup;
   typesProblemes: ITypeProbleme[];
   errorMessage: string;
-
 
   constructor(private fb: FormBuilder, private typeprobleme: TypeproblemeService) { }
   save(): void {
@@ -31,16 +42,16 @@ export class ProblemeComponent implements OnInit {
       telephone: [{value: '', disabled: true}],
     
     });
-
     this.typeprobleme.obtenirTypeProblemes()
     .subscribe(prob => this.typesProblemes = prob,
                error => this.errorMessage = <any>error);  
   }
 
-  appliquerNotifications(): void{
+  appliquerNotifications(typeNotification: string): void{
     const courrielControl = this.problemeForm.get('courrielGroup.courriel');
     const courrielConfirmationlControl = this.problemeForm.get('courrielGroup.courrielConfirmation');
     const telephoneControl = this.problemeForm.get('telephone');
+    const courrielGroupControl = this.problemeForm.get('courrielGroup');
 
     courrielControl.clearValidators();
     courrielControl.reset();
@@ -54,12 +65,22 @@ export class ProblemeComponent implements OnInit {
     telephoneControl.reset();
     telephoneControl.disable();
 
-
+    if (typeNotification === 'notifier par courriel') {
+      courrielControl.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);
+      courrielControl.enable();
+      courrielConfirmationlControl.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);
+      courrielConfirmationlControl.enable();
+      courrielGroupControl.setValidators([Validators.compose([(courrielsValides)])]);
+    }
+    if (typeNotification === 'notifier par messagerie texte') {
+      telephoneControl.setValidators([Validators.required, Validators.pattern('[0-9]+'), Validators.maxLength(10), Validators.minLength(10)]);
+      telephoneControl.enable();
+    }
 
     courrielControl.updateValueAndValidity();
     courrielConfirmationlControl.updateValueAndValidity();
     telephoneControl.updateValueAndValidity();
-    
+    courrielGroupControl.updateValueAndValidity();
   }
 
 }
