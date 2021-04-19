@@ -209,49 +209,121 @@
             </div>
       </div>
 
-        <!-- Zone de texte COURRIEL CONFIRMATION -->          
-        <div class="form-group row">                  
-          <label for="courrielConfirmationId" class="col-md-2 col-form-label text-right">Confirmer courriel :</label>
-        <!-- Indiquer le formGroupName pour avoir accès à formControlName -->            
-        <div class="col-md-10" formGroupName="courrielGroup"> 
-            <input class="form-control" 
-            id="courrielConfirmationId" 
-            type="email" 
-            placeholder="Entrez à nouveau le courriel (obligatoire si notification par courriel)" 
-            formControlName = "courrielConfirmation"
-            [ngClass]="{'is-valid': (problemeForm.get('courrielGroup.courrielConfirmation').touched || 
-            problemeForm.get('courrielGroup.courrielConfirmation').dirty) &&
-            problemeForm.get('courrielGroup.courrielConfirmation').valid, 
-            'is-invalid': (problemeForm.get('courrielGroup.courrielConfirmation').touched || problemeForm.get('courrielGroup.courrielConfirmation').dirty) &&
-            !problemeForm.get('courrielGroup.courrielConfirmation').valid || problemeForm.get('courrielGroup').errors?.courrielsInvalides}" />
+      <!-- Zone de texte COURRIEL CONFIRMATION -->          
+      <div class="form-group row">                  
+        <label for="courrielConfirmationId" class="col-md-2 col-form-label text-right">Confirmer courriel :</label>
+      <!-- Indiquer le formGroupName pour avoir accès à formControlName -->            
+      <div class="col-md-10" formGroupName="courrielGroup"> 
+          <input class="form-control" 
+          id="courrielConfirmationId" 
+          type="email" 
+          placeholder="Entrez à nouveau le courriel (obligatoire si notification par courriel)" 
+          formControlName = "courrielConfirmation"
+          [ngClass]="{'is-valid': (problemeForm.get('courrielGroup.courrielConfirmation').touched || 
+          problemeForm.get('courrielGroup.courrielConfirmation').dirty) &&
+          problemeForm.get('courrielGroup.courrielConfirmation').valid, 
+          'is-invalid': (problemeForm.get('courrielGroup.courrielConfirmation').touched || problemeForm.get('courrielGroup.courrielConfirmation').dirty) &&
+          !problemeForm.get('courrielGroup.courrielConfirmation').valid || problemeForm.get('courrielGroup').errors?.courrielsInvalides}" />
 
-                <span class="form-text" *ngIf="(problemeForm.get('courrielGroup.courrielConfirmation').touched || 
-                        problemeForm.get('courrielGroup.courrielConfirmation').dirty) && 
-                        (problemeForm.get('courrielGroup.courrielConfirmation').errors ||
-                        problemeForm.get('courrielGroup').errors)">                                
-                        <span *ngIf="problemeForm.get('courrielGroup.courrielConfirmation').errors?.required">
-                            <small  class="text-muted">                            
-                                Confirmez votre adresse courriel (la réécrire)
-                            </small>
-                      </span>
-                      <span *ngIf="problemeForm.get('courrielGroup').errors?.courrielsInvalides">
-                          <small  class="text-muted"> 
-                              Le courriel de confirmation n'est pas le même que le courriel.  Le corriger.
+              <span class="form-text" *ngIf="(problemeForm.get('courrielGroup.courrielConfirmation').touched || 
+                      problemeForm.get('courrielGroup.courrielConfirmation').dirty) && 
+                      (problemeForm.get('courrielGroup.courrielConfirmation').errors ||
+                      problemeForm.get('courrielGroup').errors)">                                
+                      <span *ngIf="problemeForm.get('courrielGroup.courrielConfirmation').errors?.required">
+                          <small  class="text-muted">                            
+                              Confirmez votre adresse courriel (la réécrire)
                           </small>
-                      </span>                         
-                </span>                              
-          </div>
-      </div>  
+                    </span>
+                    <span *ngIf="problemeForm.get('courrielGroup').errors?.courrielsInvalides">
+                        <small  class="text-muted"> 
+                            Le courriel de confirmation n'est pas le même que le courriel.  Le corriger.
+                        </small>
+                    </span>                         
+              </span>                              
+        </div>
+    </div>  
 
-            
-          </form>
+      <!-- Zone de texte # Unité  -->        
+      <div class="form-group row">          
+        <label for="noUniteId" class="col-md-2 col-form-label text-right"># Unité :</label>
+        <div class="col-md-10">
+          <input class="form-control" 
+          id="noUniteId" 
+          type="text" 
+          placeholder="Numéro de l'unité si connu" 
+          formControlName="noUnite" />
+        </div>
+      </div>      
+
+      <!-- Zone de texte DESCRIPTION DU PROBLÈME  -->        
+      <div class="form-group row">          
+        <label for="descriptionProblemeId" class="col-md-2 col-form-label text-right">Description du problème :</label>
+        <div class="col-md-10">
+          <textarea class="form-control" 
+          rows="3"              
+          id="descriptionProblemeId" 
+          type="text" 
+          placeholder="Décrire le propblème ici (obligatoire)" 
+          formControlName="descriptionProbleme"            
+          [ngClass]="{'is-valid': (problemeForm.get('descriptionProbleme').touched || problemeForm.get('descriptionProbleme').dirty) &&
+                problemeForm.get('descriptionProbleme').valid, 
+                'is-invalid': (problemeForm.get('descriptionProbleme').touched || problemeForm.get('descriptionProbleme').dirty) &&
+                !problemeForm.get('descriptionProbleme').valid }"></textarea>
+
+          <span class="form-text" *ngIf="(problemeForm.get('descriptionProbleme').touched || 
+                problemeForm.get('descriptionProbleme').dirty) && 
+                problemeForm.get('descriptionProbleme').errors">
+
+                <span *ngIf="problemeForm.get('descriptionProbleme').errors.required">
+                    <small  class="text-muted">
+                        N'oubliez pas de décrire le plus clairement possible le problème rencontré.
+                    </small>
+                </span> 
+
+                <span *ngIf="problemeForm.get('descriptionProbleme').errors.minlength">
+                  <small  class="text-muted">
+                    La description du problème doit comporter plus de 5 caractères.
+                  </small> 
+                </span>       
+          </span>
+        </div>
+      </div>
+
+      <!-- Zone de texte # Unité  -->        
+      <div class="form-group row">          
+        <label for="dateProblemeId" class="col-md-2 col-form-label text-right">Date :</label>
+        <div class="col-md-10">
+          <input class="form-control" 
+          id="dateProblemeId" 
+          type="text" 
+          formControlName="dateProbleme" />
+        </div>
+      </div> 
+         
+      <!-- DEBUT Zone bouton sauvegarder -->
+      <div class="form-group row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <span>                                       
+                    <button class="btn btn-primary"
+                            type="submit"                              
+                            [disabled]="!problemeForm.valid">
+                            <i class="fa fa-save"></i>
+                      &nbsp;&nbsp;Sauvegarder
+                    </button>
+            </span>
+        </div>
+    </div>
+    <!-- FIN Zone bouton sauvegarder -->
+    </form>
+    <!-- FIN du formulaire -->
           </div>    
         
       </div>
-      <div class="card-footer">
+      <!--<div class="card-footer">
         <a href="#" class="btn btn-primary">Sauvegarder</a>
   
-      </div>
+      </div>-->
     </div>
   
   </div>
