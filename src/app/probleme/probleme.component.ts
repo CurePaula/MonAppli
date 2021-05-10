@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ZonesValidator } from '../shared/longueur-minimum/longueur-minimum.component';
+import { IProbleme } from './probleme';
 import { ITypeProbleme } from './typeprobleme';
 import { TypeproblemeService } from './typeprobleme.service';
+import { Router } from '@angular/router';
+import { ProblemeService } from './probleme.service';
 
 function courrielsValides(c: AbstractControl): { [key: string]: boolean } | null {
   let courriel = c.get('courriel');
@@ -27,9 +30,35 @@ export class ProblemeComponent implements OnInit {
   typesProblemes: ITypeProbleme[];
   errorMessage: string;
 
-  constructor(private fb: FormBuilder, private typeprobleme: TypeproblemeService) { }
+  probleme: IProbleme;
+
+  constructor(private fb: FormBuilder, private typeprobleme: TypeproblemeService,  private problemeService: ProblemeService, private route : Router) { }
   save(): void {
+    if (this.problemeForm.dirty && this.problemeForm.valid) {
+        // Copy the form values over the problem object values
+        this.probleme = this.problemeForm.value;
+        this.probleme.id = 0;
+        if (this.problemeForm.get('courrielGroup.courriel').value!=''){
+          this.probleme.courriel = this.problemeForm.get('courrielGroup.courriel').value;
+        }
+        
+        //this.probleme.dateProbleme = new Date();
+        this.problemeService.saveProbleme(this.probleme)
+            .subscribe( // on s'abonne car on a un retour du serveur à un moment donné avec la callback fonction
+                () => this.onSaveComplete(),  // Fonction callback
+                (error: any) => this.errorMessage = <any>error
+            );
+    } else if (!this.problemeForm.dirty) {
+        this.onSaveComplete();
+    }
   }
+  
+  onSaveComplete(): void { 
+    // Reset the form to clear the flags
+    this.problemeForm.reset();  // Pour remettre Dirty à false.  Autrement le Route Guard va dire que le formulaire n'est pas sauvegardé
+    this.route.navigate(['/accueil']);
+  }
+  
   ngOnInit() {
     this.problemeForm = this.fb.group({
       nomProbleme: ['',[ Validators.required, ZonesValidator.longueurMinimum(3)]],
@@ -82,13 +111,12 @@ export class ProblemeComponent implements OnInit {
         telephoneControl.setValidators([Validators.required, Validators.pattern('[0-9]+'), Validators.maxLength(10), Validators.minLength(10)]);
         telephoneControl.enable();
     }  
-    
-  
 
     courrielControl.updateValueAndValidity();
     courrielConfirmationlControl.updateValueAndValidity();
     telephoneControl.updateValueAndValidity();
     courrielGroupControl.updateValueAndValidity();
   }
+
 
 }
